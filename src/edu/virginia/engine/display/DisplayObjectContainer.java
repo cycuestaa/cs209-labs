@@ -34,7 +34,6 @@ public class DisplayObjectContainer extends DisplayObject {
         this.scaleY=1.0;
     }
 
-
     public void setChildren(ArrayList<DisplayObject> newChildren) {
         this.children = newChildren;
     }
@@ -42,17 +41,67 @@ public class DisplayObjectContainer extends DisplayObject {
     public void addChild(DisplayObject child) {
         this.children.add(child);
     }
+
     public void addChildAtIndex(DisplayObject child, int ind) {
         this.children.add(ind, child);
     }
+
     public void removeChild(String id) {
         for (int i=0; i<this.children.size(); i++) {
             DisplayObject child = this.children.get(i);
             if (child.getId() == id) {
                 this.removeByIndex(i);
             }
+        }
     }
+
     public void removeByIndex(int ind) {
         this.children.remove(ind);
+    }
+
+    public void removeAll() {
+        for (int i=0; i<this.children.size(); i++) {
+            this.removeByIndex(i);
+        }
+    }
+
+
+    public boolean contains(DisplayObject child) {
+        for (int i=0; i<this.children.size(); i++) {
+            if (this.children.get(i) == child) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public DisplayObject getChild(String id) {
+        for (int i=0; i<this.children.size(); i++) {
+            DisplayObject child = this.children.get(i);
+            if (child.getId() == id) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    public DisplayObject getChild(int index) {
+        return this.children.get(index);
+    }
+
+    public ArrayList<DisplayObject> getChildren() {
+        return this.children;
+    }
+
+    protected void draw(Graphics g) {
+        super.draw(g);
+        this.applyTransformations(g);
+
+        for (int i=0; i<this.children.size(); i++) {
+            DisplayObject child = this.getChild(i);
+            child.draw(g);
+        }
+
+        this.reverseTransformations(g);
     }
 }
