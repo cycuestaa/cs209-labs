@@ -36,6 +36,7 @@ public class DisplayObject {
 	private double scaleX;
 	private double scaleY;
 
+    private double parent;
 
 	/**
 	 * Constructors: can pass in the id OR the id and image's file path and
@@ -66,7 +67,7 @@ public class DisplayObject {
         this.scaleY=1.0;
 	}
 
-
+    System.out.println("hello");
 
 	public void setId(String id) {
 		this.id = id;
