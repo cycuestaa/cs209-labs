@@ -12,9 +12,11 @@ import java.io.*;
 public class SoundManager {
 
     private HashMap<String, Clip>  soundEffects;
+    private HashMap<String, Clip>  music;
 
     public SoundManager() {
          this.soundEffects = new HashMap<String,Clip>();
+         this.music = new HashMap<String,Clip>();
     }
 
     public void LoadSoundEffect(String id, String filename) {
@@ -29,6 +31,24 @@ public class SoundManager {
         }
     }
 
-	
+    public void PlaySoundEffect(String id) {
+        this.soundEffects.get(id).start();
+    }
+
+    public void LoadMusic(String id, String filename) {
+        try {
+            URL url = this.getClass().getClassLoader().getResource(filename);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            this.music.put(id, clip);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void PlayMusic(String id) {
+        this.music.get(id).loop(Clip.LOOP_CONTINUOUSLY);
+    }
 }
 
