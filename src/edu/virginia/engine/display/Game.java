@@ -19,7 +19,7 @@ import javax.swing.Timer;
  * Highest level class for creating a game in Java.
  * 
  * */
-public class Game extends DisplayObject implements ActionListener, KeyListener {
+public class Game extends DisplayObjectContainer implements ActionListener, KeyListener {
 
 	/* Frames per second this game runs at */
 	private int FRAMES_PER_SEC = 60;
@@ -63,6 +63,7 @@ public class Game extends DisplayObject implements ActionListener, KeyListener {
 		});
 		getMainFrame().addKeyListener(this);
 	}
+
 
 	/**
 	 * Starts the game
