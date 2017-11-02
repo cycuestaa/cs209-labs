@@ -19,7 +19,7 @@ public class Sprite extends DisplayObjectContainer {
 		setImage(imageFileName);
 		setParent(parent);
 		setPosition(pos);
-	}g
+	}
 
 	public Sprite(String id, String imageFileName, DisplayObject parent, Point pivot, Point pos) {
 		super(id);

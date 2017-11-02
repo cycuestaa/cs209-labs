@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
  * A very basic display object for a java based gaming engine
  * 
  * */
-public class DisplayObject {
+public class DisplayObject implements shape{
 	/* bc we need to know about the parent objects and relation */
 	private DisplayObject parent;
 	//public DisplayObject parent;
@@ -147,14 +147,13 @@ public class DisplayObject {
 	}
 
 
-
-
 	/**
 	 * Hitbox is for simplifying collision detection of weird-shaped sprites
 	 */
-	//public Boolean getHitbox() {
+	//hitbox sets bounds for image
+	public Boolean getHitbox() {
 
-	//}
+	}
 
 
 
@@ -200,35 +199,6 @@ public class DisplayObject {
 	 * */
 	protected void update(ArrayList<Integer> pressedKeys) { }
 
-	/**
-	 * Draws this image. This should be overloaded if a display object should
-	 * draw to the screen differently. This method is automatically invoked on
-	 * every frame.
-	 * */
-	public void draw(Graphics g) {
-
-		if (displayImage != null) {
-
-			/*
-			 * Get the graphics and apply this objects transformations
-			 * (rotation, etc.)
-			 */
-			Graphics2D g2d = (Graphics2D) g;
-
-
-			/* Actually draw the image, perform the pivot point translation here */
-			g2d.drawImage(displayImage, 0, 0,
-					(int) (getUnscaledWidth()),
-					(int) (getUnscaledHeight()), null);
-
-			/*
-			 * undo the transformations so this doesn't affect other display
-			 * objects
-			 */
-
-			//reverseTransformations(g2d);
-		}
-	}
 
 	/**
 	 * Applies transformations for this display object to the given graphics
@@ -258,9 +228,40 @@ public class DisplayObject {
 	 * */
 	protected void reverseTransformations(Graphics2D g2d) {
         g2d.setComposite(AlphaComposite.getInstance(3,this.oldAlpha));
-		g2d.rotate(Math.toRadians((-1) * this.getRotation()), this.pivotPoint.x, this.pivotPoint.y);
 		g2d.scale((1/this.scaleX),(1/this.scaleY));
+		g2d.rotate(Math.toRadians((-1) * this.getRotation()), this.pivotPoint.x, this.pivotPoint.y);
 		g2d.translate((-1) * this.position.x,(-1) * this.position.y);
+
 	}
 
 }
+
+	/**
+	 * Draws this image. This should be overloaded if a display object should
+	 * draw to the screen differently. This method is automatically invoked on
+	 * every frame.
+	 * */
+	public void draw(Graphics g) {
+
+		if (displayImage != null) {
+
+			/*
+			 * Get the graphics and apply this objects transformations
+			 * (rotation, etc.)
+			 */
+			Graphics2D g2d = (Graphics2D) g;
+			applyTransformations(g2d);
+
+			/* Actually draw the image, perform the pivot point translation here */
+			g2d.drawImage(displayImage, 0, 0,
+					(int) (getUnscaledWidth()),
+					(int) (getUnscaledHeight()), null);
+
+			/*
+			 * undo the transformations so this doesn't affect other display
+			 * objects
+			 */
+
+			reverseTransformations(g2d);
+		}
+	}
