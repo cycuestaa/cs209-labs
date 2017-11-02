@@ -43,6 +43,7 @@ public class DisplayObject {
 	/*double which scales the image up or down. 1.0 would be the actual size*/
 	private double scaleX;
 	private double scaleY;
+	private Point centerPoint;
 
 	//the middle of the image
 //	private Point centerPoint;
@@ -62,8 +63,7 @@ public class DisplayObject {
         this.oldAlpha=0.0f;
         this.scaleX=1.0;
         this.scaleY=1.0;
-		//this.centerPoint= new Point((int)(this.getUnscaledWidth()* this.getScaleX())/2,
-			//	(int)(this.getUnscaledHeight()*this.getScaleY()/2));
+		this.centerPoint= this.getCenterPoint();
 
 	}
 
@@ -78,10 +78,16 @@ public class DisplayObject {
         this.oldAlpha=0.0f;
         this.scaleX=1.0;
         this.scaleY=1.0;
-		//this.centerPoint= new Point((int)(this.getUnscaledWidth()* this.getScaleX())/2,
-		//		(int)(this.getUnscaledHeight()*this.getScaleY()/2));
+		this.centerPoint = this.getCenterPoint();
 	}
 
+
+	public Point getCenterPoint() {
+		int widthCenter = (int) ((this.getUnscaledWidth() * this.getScaleX()) / 2);
+		int heightCenter = (int) ((this.getUnscaledHeight() * this.getScaleY()) / 2);
+		Point center = new Point(widthCenter, heightCenter);
+		return center;
+	}
 
 	// remember hierarchy
 	public void setParent(DisplayObject parent) { this.parent = parent; }
