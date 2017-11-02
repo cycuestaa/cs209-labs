@@ -60,7 +60,7 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     /*
-     * Returns true if DO is already a child of this container.
+     * Returns true if D.O. is already a child of this container.
      * */
     public boolean contains(DisplayObject child) {
         for (int i = 0; i < this.children.size(); i++) {
@@ -75,11 +75,15 @@ public class DisplayObjectContainer extends DisplayObject {
      * Add container methods
      */
     public void addChild(DisplayObject child) {
-        children.add(child);
+        if(!contains(child)) {
+            children.add(child);
+        }
     }
 
     public void addChildAtIndex(DisplayObject child, int ind) {
-        this.children.add(ind, child);
+        if(!contains(child)) {
+            this.children.add(ind, child);
+        }
     }
 
 
@@ -91,10 +95,12 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public void removeChild(String id) {
-        for (int i = 0; i < this.children.size(); i++) {
-            DisplayObject child = getChild(i);
-            if (Objects.equals(child.getId(), id)) {
-                this.removeByIndex(i);
+        if(contains(getChild(id))) {
+            for (int i = 0; i < this.children.size(); i++) {
+                DisplayObject child = getChild(i);
+                if (Objects.equals(child.getId(), id)) {
+                    this.removeByIndex(i);
+                }
             }
         }
     }
@@ -115,7 +121,7 @@ public class DisplayObjectContainer extends DisplayObject {
             applyTransformations(g2d);
             super.draw(g2d);
 
-            if (children != null) {
+            if (children != null ) {
                 for (DisplayObject child : children) {
                     child.draw(g);
                 }

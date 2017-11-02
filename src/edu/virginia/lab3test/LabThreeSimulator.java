@@ -25,11 +25,18 @@ public class LabThreeSimulator extends Game {
     /**
      * Create the sprite objects for our solar system!
      **/
-    Sprite Sun = new Sprite("Sun", "pic_Sun.png", null, new Point(550, 550));
-    Sprite Mercury = new Sprite("Mercury", "pic_Mercury.png", Sun, new Point(400, 400));
-    Sprite Earth = new Sprite("Earth", "pic_Earth.png", Sun, new Point(250, 150));
-    Sprite Moon = new Sprite("Moon", "pic_Moon.png", Earth, new Point(100, 300));
-    Sprite Saturn = new Sprite("Saturn", "pic_Saturn.png", Sun, new Point(350, 250));
+
+    // (String id, String imageFileName, DisplayObject parent, Point pivot, Point pos)
+    Sprite Sun = new Sprite("Sun", "pic_Sun.png", null, new Point(550, 300));
+    // origin = the point around where shit pivots
+    Point origin = Sun.getPosition();
+
+    Sprite Mercury = new Sprite("Mercury", "pic_Mercury.png", Sun, origin, new Point(100,100));
+    Sprite Earth = new Sprite("Earth", "pic_Earth.png", Sun, origin, new Point(200,200));
+    Point midEarth = Earth.getPosition();
+    // midEarth
+    Sprite Moon = new Sprite("Moon", "pic_Moon.png", Earth, midEarth, new Point(100,100));
+    Sprite Saturn = new Sprite("Saturn", "pic_Saturn.png", Sun, origin, new Point(600,600));
 
 
 
@@ -55,14 +62,30 @@ public class LabThreeSimulator extends Game {
     @Override
     public void update(ArrayList<Integer> pressedKeys){
         super.update(pressedKeys);
-        Mercury.setRotation(Mercury.getRotation() + 0.3);
-        Mercury.setPivotPoint(new Point(-75, -75));
+        Mercury.setScaleY(0.25);
+        Mercury.setScaleX(0.25);
+        Mercury.setRotation(Mercury.getRotation() + 1.6);
+        //Mercury.setPivotPoint(new Point(-75, -75));
+        Mercury.setPivotPoint(new Point(600, 400));
+
+        Saturn.setScaleY(0.7);
+        Saturn.setScaleX(0.7);
         Saturn.setRotation(Saturn.getRotation() + 0.5);
-        Saturn.setPivotPoint(new Point(75, 75));
-        Earth.setRotation(Earth.getRotation() + 0.5);
-        Earth.setPivotPoint(new Point(-75, -75));
-        Moon.setRotation(Moon.getRotation() + 0.9);
-        Moon.setPivotPoint(new Point(-40, 55));
+        //Saturn.setPivotPoint(new Point(-175, 75));
+        Saturn.setPivotPoint(new Point(500, 200));
+
+        Earth.setScaleY(0.4);
+        Earth.setScaleX(0.4);
+        Earth.setRotation(Earth.getRotation() + 1);
+        //Earth.setPivotPoint(new Point(-75, -75));
+        Earth.setPivotPoint(new Point(800,600));
+
+        Moon.setScaleY(0.5);
+        Moon.setScaleX(0.5);
+        Moon.setRotation(Moon.getRotation() + 2);
+        //Moon.setPivotPoint(new Point(-40, 55));
+        Moon.setPivotPoint(new Point(0, 0));
+
 
 		/* Make sure Sun is not null. Swing may auto cause an extra frame to go before everything is initialized */
         if(Sun != null) {
@@ -191,8 +214,8 @@ public class LabThreeSimulator extends Game {
 
         if (Sun != null) {
             Sun.draw(g);
-            Earth.draw(g);
-            Moon.draw(g);
+            //Earth.draw(g);
+            //Moon.draw(g);
         }
     }
 

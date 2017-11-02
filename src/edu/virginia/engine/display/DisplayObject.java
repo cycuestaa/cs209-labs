@@ -27,7 +27,7 @@ public class DisplayObject {
 	/* describes the x-y position where the object will be drawn*/
 	private Point position;
 
-	/*the point that is the origin of the object. the object rotates around this point*/
+	/*the point that is the origin of the object. the object rotates around this point at a distance indicated*/
 	private Point pivotPoint;
 
 	/*Rotation: defines the amount in degrees to rotate the object*/
@@ -44,7 +44,8 @@ public class DisplayObject {
 	private double scaleX;
 	private double scaleY;
 
-
+	//the middle of the image
+//	private Point centerPoint;
 
 
 	/**
@@ -61,6 +62,9 @@ public class DisplayObject {
         this.oldAlpha=0.0f;
         this.scaleX=1.0;
         this.scaleY=1.0;
+		//this.centerPoint= new Point((int)(this.getUnscaledWidth()* this.getScaleX())/2,
+			//	(int)(this.getUnscaledHeight()*this.getScaleY()/2));
+
 	}
 
 	public DisplayObject(String id, String fileName) {
@@ -74,6 +78,8 @@ public class DisplayObject {
         this.oldAlpha=0.0f;
         this.scaleX=1.0;
         this.scaleY=1.0;
+		//this.centerPoint= new Point((int)(this.getUnscaledWidth()* this.getScaleX())/2,
+		//		(int)(this.getUnscaledHeight()*this.getScaleY()/2));
 	}
 
 
@@ -93,6 +99,7 @@ public class DisplayObject {
 
 	public void setPivotPoint(Point pivotPoint) { this.pivotPoint = pivotPoint; }
 	public Point getPivotPoint() { return pivotPoint; }
+
 
 	public void setRotation(double Rotation) { this.Rotation = Rotation; }
 	public double getRotation() {
@@ -114,32 +121,42 @@ public class DisplayObject {
     public double getScaleY() { return scaleY; }
     public void setScaleY(double newY) { this.scaleY=newY; }
 
-	/**
-	 * Returns the unscaled width and height of this display object
-	 * */
-	public int getUnscaledWidth() {
-		if(displayImage == null) { return 0; }
-		return displayImage.getWidth();
-	}
-
-	public int getUnscaledHeight() {
-		if(displayImage == null) { return 0; }
-		return displayImage.getHeight();
-	}
+	//public void setCenterPoint(Point centerPoint) { this.centerPoint = centerPoint; }
+	//public Point getCenterPoint() { return centerPoint; }
 
 	public BufferedImage getDisplayImage() {
 		return this.displayImage;
 	}
 
-	protected void setImage(String imageName) {
-		if (imageName == null) {
-			return;
+
+	/**
+	 * Returns the UNSCALED width and height of this display object
+	 * */
+	public int getUnscaledWidth() {
+		if(displayImage == null) {
+			return 0;
 		}
-		displayImage = readImage(imageName);
-		if (displayImage == null) {
-			System.err.println("[DisplayObject.setImage] ERROR: " + imageName + " doesn't exist!");
-		}
+		return displayImage.getWidth();
 	}
+
+	public int getUnscaledHeight() {
+		if(displayImage == null) {
+			return 0;
+		}
+		return displayImage.getHeight();
+	}
+
+
+
+
+	/**
+	 * Hitbox is for simplifying collision detection of weird-shaped sprites
+	 */
+	//public Boolean getHitbox() {
+
+	//}
+
+
 
 
 	/**
@@ -159,8 +176,21 @@ public class DisplayObject {
 	}
 
 	public void setImage(BufferedImage image) {
-		if(image == null) { return; }
+		if(image == null) {
+			return;
+		}
 		displayImage = image;
+	}
+
+	protected void setImage(String imageName) {
+		if (imageName == null) {
+			return;
+		}
+
+		if (readImage(imageName) == null) {
+			System.err.println("[DisplayObject.setImage] ERROR: " + imageName + " doesn't exist!");
+		}
+		displayImage = readImage(imageName);
 	}
 
 	/**
