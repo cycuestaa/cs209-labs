@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.Sprite;
+import edu.virginia.engine.display.SoundManager;
 //import edu.virginia.engine.display.AnimatedSprite;
 //import edu.virginia.engine.display.Animation;
 import edu.virginia.engine.display.DisplayObject;
@@ -24,19 +25,23 @@ import javax.sound.sampled.*;
 
 public class LabFourGame extends Game {
 
-	Sprite coin1 = new Sprite("Coin1", "coin1.png", null, new Point(200,150));
+	Sprite coin1 = new Sprite("Coin1", "coin1.png", null, new Point(200, 150));
 //	Rectangle c1box = coin1.getHitBox().getBounds();
 
-	Sprite coin2 = new Sprite("Coin2", "coin2.png", null, new Point(300,150));
+	Sprite coin2 = new Sprite("Coin2", "coin2.png", null, new Point(300, 150));
 //	Rectangle c2box = coin2.getHitBox().getBounds();
 
 	Sprite pipe = new Sprite("Pipe", "pipe.png", null, new Point(550, 880));
 //	Rectangle exitbox = pipe.getHitBox().getBounds();
 
-	Sprite mario = new Sprite("Mario", "Mario.png", null, new Point(0,0));
-	Shape box = new Rectangle(mario.getPosition().x,mario.getPosition().y, mario.getUnscaledWidth(),
+	Sprite mario = new Sprite("Mario", "Mario.png", null, new Point(0, 0));
+	Shape box = new Rectangle(mario.getPosition().x, mario.getPosition().y, mario.getUnscaledWidth(),
 			mario.getUnscaledHeight());
 	Rectangle marioBox = box.getBounds();
+
+	SoundManager sounds = new SoundManager();
+
+
 
 
 	//	Sprite c3 = new Sprite("Coin3", "coin3.png", null, new Point(700,250));
@@ -53,6 +58,9 @@ public class LabFourGame extends Game {
 	public LabFourGame() {
 		super("Lab Four Test Game", 1000, 700);
 		score = 100;
+		sounds.LoadSoundEffect("points","ding.wav");
+		sounds.LoadSoundEffect("die","end.wav");
+		sounds.LoadMusic("main", "main_music.wav");
 	}
 
 	/**
@@ -194,7 +202,12 @@ public class LabFourGame extends Game {
 		g2d.setColor(SkyBlue);
 		g2d.fillRect(0, 0, 1000, 700);
 
-		mario.setHitBox(atran.createTransformedShape(mario.getHitBox()));
+
+		System.out.println(mario.hitArea);
+
+		Shape s = mario.getHitBox();
+
+		mario.setHitBox(atran.createTransformedShape(s));
 	/* Same, just check for null in case a frame gets thrown in before Mario is initialized */
 		if (mario != null) {
 			mario.draw(g);
@@ -217,12 +230,15 @@ public class LabFourGame extends Game {
 			score = score + 20;
 			g.drawString("YOU WIN!!!!! Final score: " + score,300,50);
 			stop();
+			this.sounds.playSoundEffect("end");
 		}
 		if (mario.collidesWith(coin1)==true){
+			this.sounds.playSoundEffect("points");
 			score = score + 40;
 			//sm.PlaySoundEffect("se1");
 		}
 		if (mario.collidesWith(coin2) ==true){
+			this.sounds.playSoundEffect("points");
 			score = score + 40;
 			//sm.PlaySoundEffect("se1");
 		}
@@ -239,6 +255,7 @@ public class LabFourGame extends Game {
 
 	public static void main(String[] args) {
 		LabFourGame game = new LabFourGame();
+		game.sounds.playMusic("main");
 		game.start();
 
 	}

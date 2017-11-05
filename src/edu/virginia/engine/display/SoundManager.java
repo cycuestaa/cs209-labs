@@ -4,10 +4,7 @@ import javax.sound.sampled.*;
 import java.net.*;
 import java.io.*;
 
-/**
- * Nothing in this class (yet) because there is nothing specific to a Sprite yet that a DisplayObject
- * doesn't already do. Leaving it here for convenience later. you will see!
- * */
+
 
 public class SoundManager {
 
@@ -21,7 +18,10 @@ public class SoundManager {
 
     public void LoadSoundEffect(String id, String filename) {
         try {
-            URL url = this.getClass().getClassLoader().getResource(filename);
+            String source = filename;
+            System.out.println(source);
+            URL url = this.getClass().getClassLoader().getResource(source);
+            System.out.println(url);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
@@ -31,13 +31,15 @@ public class SoundManager {
         }
     }
 
-    public void PlaySoundEffect(String id) {
+    public void playSoundEffect(String id) {
         this.soundEffects.get(id).start();
     }
 
     public void LoadMusic(String id, String filename) {
         try {
-            URL url = this.getClass().getClassLoader().getResource(filename);
+            String source = filename;
+            URL url = this.getClass().getClassLoader().getResource(source);
+            System.out.println(url);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
@@ -47,7 +49,7 @@ public class SoundManager {
         }
     }
 
-    public void PlayMusic(String id) {
+    public void playMusic(String id) {
         this.music.get(id).loop(Clip.LOOP_CONTINUOUSLY);
     }
 }
