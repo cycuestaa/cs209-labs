@@ -1,28 +1,26 @@
-cs209 Lab2
+cs209 Lab4
 Partners: Camila Cuesta, Siddharth Sachdeva
 
+~ CONTROLS ~
+Use Arrow Keys UP/DOWN/RIGHT/Left: 
+- Moves Mario to different positions on the screen.
 
-To run animations:
-	PRESS KEY “LEFT”
+IJKL: 
+- Treated as keyboard arrows, moves Mario’s pivot point around.
 
-To increase speed of animation:
-	PRESS KEY “T”
+W & Q: 
+- Rotates your sprite clockwise and counter-clockwise respectively.
 
-To reduce speed of animation:
-	PRESS KEY “R”
+V: 
+- Toggles visibility of your Mario.
 
-Arrow Keys: 
-UP/DOWN/RIGHT: Moves your sprite to different positions on the screen.
-/Users/cycuesta/Documents/UC/2017-2018/SOSC/Week 3/W3b-Smith_WN_Quotes/README.txt
+Z&X: 
+- Makes your Mario more and less transparent.
 
-IJKL: Treated as keyboard arrows. 
-Moves the sprite’s pivot point around.
+A&S: 
+- Scales your Mario up and down respectively.
 
+TO PLAY:
+Beware, Mario will lose points for touching the Piranha Plants! Each time this occurs, a sound will notify you of the instance… move away!
 
-W & Q: Rotates your sprite clockwise and counter-clockwise respectively.
-
-V: Toggles visibility of your sprite.
-
-Z&X: Makes your sprite more and less transparent.
-
-A&S: Scales your sprite up and down respectively.
+Navigate Mario to the pipe to win! 

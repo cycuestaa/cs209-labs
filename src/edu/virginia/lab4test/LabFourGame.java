@@ -2,16 +2,16 @@ package edu.virginia.lab4test;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.Sprite;
-//import edu.virginia.engine.display.AnimatedSprite;
-//import edu.virginia.engine.display.Animation;
+import edu.virginia.engine.display.AnimatedSprite;
+import edu.virginia.engine.display.Animation;
 import edu.virginia.engine.display.DisplayObject;
 import edu.virginia.engine.display.DisplayObjectContainer;
+import edu.virginia.engine.display.SoundManager;
 import java.awt.geom.AffineTransform;
 
 import java.awt.Shape;
@@ -24,24 +24,21 @@ import javax.sound.sampled.*;
  * */
 
 public class LabFourGame extends Game {
-
+	//good dudes
+	Sprite pipe = new Sprite("Pipe", "pipe.png", null, new Point(1000, 750));
 	//bad dudes
 	Sprite coin1 = new Sprite("Coin1", "piranha1.png", null, new Point(350,350));
 	Sprite coin2 = new Sprite("Coin2", "piranha2.png", null, new Point(750,350));
 
-	//good dudes
-	Sprite pipe = new Sprite("Pipe", "pipe.png", null, new Point(1000, 750));
+	//main dude
 	Sprite mario = new Sprite("Mario", "Mario.png", null, new Point(0,50));
-
 	Rectangle2D marioBox = new Rectangle2D.Double(mario.getPosition().x, mario.getPosition().y, mario.getWidth(),
 			mario.getHeight());
 
-	AffineTransform atran = new AffineTransform();
-
-
 	public int score;
+	AffineTransform atran = new AffineTransform();
+	SoundManager sounds = new SoundManager();
 
-	//SoundManager sound = new SoundManager();
 
 	/**
 	 * Constructor. See constructor in Game.java for details on the parameters given
@@ -49,6 +46,9 @@ public class LabFourGame extends Game {
 	public LabFourGame() {
 		super("Lab Four Test Game", 1400, 900);
 		score = 1000;
+		sounds.LoadSoundEffect("points","ding.wav");
+		sounds.LoadSoundEffect("die","end.wav");
+		sounds.LoadMusic("main", "main_music.wav");
 	}
 
 	/**
@@ -217,15 +217,16 @@ public class LabFourGame extends Game {
 		if (mario.collidesWith(pipe)==true) {
 			score = score + 1000;
 			text.drawString("+1000 points.... YOU WIN!!!!! Final score: " + score,300,50);
+			this.sounds.playSoundEffect("end");
 			stop();
 		}
 		if (mario.collidesWith(coin1)==true){
 			score = score - 10;
-			//sm.PlaySoundEffect("se1");
+			this.sounds.playSoundEffect("points");
 		}
 		if (mario.collidesWith(coin2) ==true){
 			score = score - 10;
-			//sm.PlaySoundEffect("se1");
+			this.sounds.playSoundEffect("points");
 		}
 
 
@@ -239,6 +240,7 @@ public class LabFourGame extends Game {
 
 	public static void main(String[] args) {
 		LabFourGame game = new LabFourGame();
+		game.sounds.playMusic("main");
 		game.start();
 
 	}
