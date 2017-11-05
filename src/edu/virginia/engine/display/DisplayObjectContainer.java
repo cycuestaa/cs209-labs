@@ -37,12 +37,23 @@ public class DisplayObjectContainer extends DisplayObject {
      * Setters & Getters
      */
     // Returns true if D.O. is already a child of this container.
-    public boolean contains(DisplayObject child) { return children.contains(child); }
+    public boolean contains(DisplayObject child) {
+        for(int i=0; i < this.children.size(); i++) {
+            if(this.children.get(i) == child ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void setChildren(ArrayList<DisplayObject> newChildren) { this.children = newChildren; }
+    public ArrayList<DisplayObject> getChildren(DisplayObjectContainer c) {
+        return c.children;
+    }
     public ArrayList<DisplayObject> getChildren() {
         return this.children;
     }
+
 
     //Add container methods
     public DisplayObject getChild(int index) {
@@ -50,51 +61,47 @@ public class DisplayObjectContainer extends DisplayObject {
     }
 
     public DisplayObject getChild(String id) {
-        for (int i = 0; i < getChildren().size(); i++) {
-            DisplayObject child = getChild(i);
+        for (int i = 0; i < this.children.size(); i++) {
+            DisplayObject child = this.children.get(i);
             String ch = child.getId();
-            if (Objects.equals(ch, id)) {
+            if (id == ch) {
                 return child;
             }
         }
         return null;
     }
     public void addChild(DisplayObject child) {
-        if(!contains(child)) {
-            getChildren().add(child);
+        if(child.getParent()==this && this.contains(child)==false) {
+            this.children.add(child);
         }
     }
 
-    public void addChildAtIndex(DisplayObject child, int ind) {
-        if(!contains(child)) {
-            children.add(ind, child);
+    public void addChildAtIndex(DisplayObject child, int i) {
+        if(child.getParent()==this && this.contains(child)==false) {
+            this.children.add(i, child);
         }
     }
 
     /*
     * Remove container methods
     * */
-    public void removeByIndex(int ind) {
-        this.children.remove(ind);
+    public void removeByIndex(int i) {
+        this.children.remove(i);
     }
 
-    public void removeChild(String id) {
-        if(contains(getChild(id))) {
-            for (int i = 0; i < getChildren().size(); i++) {
-                DisplayObject child = getChild(i);
-                if (Objects.equals(child.getId(), id)) {
-                    this.removeByIndex(i);
-                }
-            }
+    public void removeChild(DisplayObject child) {
+        if(this.children.contains(child)) {
+            this.children.remove(child);
         }
     }
 
 
     public void removeAll() {
         for (int i = 0; i < getChildren().size(); i++) {
-            this.removeByIndex(i);
+            removeByIndex(i);
         }
     }
+
 
 
     @Override
@@ -103,9 +110,9 @@ public class DisplayObjectContainer extends DisplayObject {
         if (getVisible()) {
             applyTransformations(g2);
             super.draw(g2);
-            if (children != null ) {
-                for (DisplayObject child : children) {
-                    child.draw(g);
+            if (getChildren() != null ) {
+                for (int i=0; i < this.children.size(); i++){
+                    this.children.get(i).draw(g);
                 }
             }
             reverseTransformations(g2);
