@@ -13,15 +13,20 @@ public class Sprite extends DisplayObjectContainer {
 		super(id);
 	}
 
-	public Sprite(String id, String imageFileName) {
-		super(id, imageFileName);
-	}
-
 	public Sprite(String id, String imageFileName, DisplayObject parent, Point pos) {
+
 		super(id);
 		setImage(imageFileName);
 		setParent(parent);
 		setPosition(pos);
+	}
+
+	public Sprite(String id, String imageFileName, DisplayObject parent, Point pivot, Point pos) {
+		super(id);
+		setImage(imageFileName);
+		setParent(parent);
+		setPosition(pos);
+		setPivotPoint(pivot);
 	}
 	
 	@Override
