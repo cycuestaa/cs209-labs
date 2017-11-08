@@ -104,7 +104,7 @@ public class LabFourGame extends Game {
 			if (pressedKeys.contains(KeyEvent.VK_Q)) {
 				mario.setRotation(mario.getRotation() - 10);
 				Point pivot = mario.getPivotPoint();
-				atran.getRotateInstance(Math.toRadians(mario.getRotation()),pivot.x , pivot.y);
+				atran = atran.getRotateInstance(Math.toRadians(mario.getRotation()),pivot.x , pivot.y);
 			}
 			// SCALE up , down
 			if (pressedKeys.contains(KeyEvent.VK_A)){
