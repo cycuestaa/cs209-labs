@@ -1,5 +1,5 @@
-//package edu.virginia.engine.display;
-package edu.virginia.engine.lab4test;
+package edu.virginia.engine.display;
+//package edu.virginia.engine.lab4test;
 
 import java.util.*;
 import javax.sound.sampled.*;
@@ -18,12 +18,11 @@ public class SoundManager {
          this.soundEffects = new HashMap<String,Clip>();
          this.music = new HashMap<String,Clip>();
     }
-
     public void LoadSoundEffect(String id, String filename) {
         try {
-            String source = filename;
-            System.out.println(source);
-            URL url = this.getClass().getClassLoader().getResource(source);
+            //System.out.println("here");
+            String name = File.separator +  filename;
+            URL url = this.getClass().getResource(filename);
             System.out.println(url);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
@@ -41,7 +40,7 @@ public class SoundManager {
     public void LoadMusic(String id, String filename) {
         try {
             String source = filename;
-            URL url = this.getClass().getClassLoader().getResource(source);
+            URL url = this.getClass().getResource(source);
             System.out.println(url);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();

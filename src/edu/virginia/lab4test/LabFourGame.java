@@ -47,7 +47,7 @@ public class LabFourGame extends Game {
 		super("Lab Four Test Game", 1400, 900);
 		score = 1000;
 		sounds.LoadSoundEffect("points","ding.wav");
-		sounds.LoadSoundEffect("die","end.wav");
+		sounds.LoadSoundEffect("end","end.wav");
 		sounds.LoadMusic("main", "main_music.wav");
 	}
 
