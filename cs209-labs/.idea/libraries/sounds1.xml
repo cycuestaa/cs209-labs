@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sounds1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/out/production/cs209-labs/sounds.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,6 +1,8 @@
 package edu.virginia.engine.display;
+
 import java.util.*;
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.net.*;
 import java.io.*;
 

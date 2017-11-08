@@ -1,7 +1,11 @@
 package edu.virginia.engine.display;
 
+import org.w3c.dom.css.Rect;
+
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +60,7 @@ public class DisplayObject{
 		this.setId(id);
 		this.parent = null;
 		this.position = new Point(0, 0);
-		this.pivotPoint = new Point(0, 0);
+		this.pivotPoint = new Point(this.getUnscaledHeight()/2,this.getUnscaledWidth()/2);
 		this.Rotation = 0;
 		this.visible = true;
 		this.alpha = 1.0f;
@@ -72,7 +76,7 @@ public class DisplayObject{
 		this.setImage(fileName);
 		this.parent = null;
 		this.position = new Point(0, 0);
-		this.pivotPoint = new Point(0, 0);
+		this.pivotPoint = new Point(this.getUnscaledHeight()/2,this.getUnscaledWidth()/2);
 		this.Rotation = 0;
 		this.visible = true;
 		this.alpha = 1.0f;
@@ -88,20 +92,26 @@ public class DisplayObject{
 	public void setHitArea() {
 		int TopX = this.getPosition().x;
 		int TopY = this.getPosition().y;
-		int Height = (int) Math.round(this.getUnscaledHeight() * this.scaleY);
-		int Width = (int) Math.round(this.getUnscaledWidth() * this.scaleX);
-		Shape Bounds = new Rectangle(TopX, TopY, Width, Height);
-		this.hitArea = Bounds;
+		int Height = this.getHeight();
+		int Width = this.getWidth();
+		Rectangle2D Bounds = new Rectangle2D.Double(TopX, TopY, Width, Height);
+		AffineTransform mod = AffineTransform.getRotateInstance(Math.toRadians(this.getRotation()), this.getPivotPoint().x ,this.getPivotPoint().y);
+		Shape rotated = mod.createTransformedShape(Bounds);
+		this.hitArea = rotated;
 	}
 	public Shape getHitArea() {return hitArea;}
 
 	public void setHitBox(Shape s) { this.hitArea = s; }
-	public Shape getHitBox() { return hitArea;}
+	public Rectangle getHitBox() {
+		Rectangle box = new Rectangle(this.getPosition().x, this.getPosition().y,
+				this.getWidth(), this.getHeight());
+		return box;
+	}
 
 	public Boolean collidesWith(DisplayObject other) {
 		Boolean Hit;
-		Rectangle OtherObj = other.getHitBox().getBounds();
-		Rectangle currObj = this.getHitBox().getBounds();
+		Rectangle OtherObj = other.getHitBox();
+		Rectangle currObj = this.getHitBox();
 		Hit = currObj.intersects(OtherObj);
 		return Hit;
 	}
@@ -130,7 +140,7 @@ public class DisplayObject{
 	}
 
 	public void setPivotPoint(Point pivotPoint) {
-		this.pivotPoint = pivotPoint;
+		this.pivotPoint.setLocation(pivotPoint);
 	}
 
 	public Point getPivotPoint() {
@@ -208,7 +218,7 @@ public class DisplayObject{
 	}
 
 	/**
-	 * Returns the UNSCALED width and height of this display object
+	 * Returns the Display Object IMAGE's width and height of this display object
 	 */
 	public int getUnscaledWidth() {
 		BufferedImage currImage = getDisplayImage();
@@ -226,34 +236,41 @@ public class DisplayObject{
 		return currImage.getHeight();
 	}
 
-	/* convert local to global coordinate system
-	private void toGlobal() {
-		if (getParent() == null) {
-			return;
+	public int getWidth() {
+		BufferedImage currImage = getDisplayImage();
+		if (currImage == null) {
+			return 0;
 		}
-		DisplayObject inObj = getParent();
-		Point parentPos = inObj.getPosition();
-		Point localPos = this.position;
-		Point convertPos = new Point(parentPos.x + localPos.x,
-				parentPos.y + localPos.y);
-
-		setPosition(convertPos);
+		int w = (int) Math.round((displayImage.getWidth() * this.getScaleX()));
+		return w;
 	}
 
-	private Point toLocal() {
+	public int getHeight() {
+		BufferedImage currImage = getDisplayImage();
+		if (currImage == null) {
+			return 0;
+		}
+		int h = (int) Math.round(displayImage.getHeight() * this.getScaleY());
+		return h;
+	}
 
-		if (() == null) {
-			return;
+	// convert local to global coordinate system
+	public Point toGlobal(Point localP) {
+		if (this.getParent() == null) {
+			return localP;
 		}
 		DisplayObject inObj = getParent();
-		Point parentPos = inObj.getPosition();
-		Point localPos = this.position;
-		Point convertPos = new Point(parentPos.x + localPos.x,
-				parentPos.y + localPos.y);
-
-		setPosition(convertPos);
+		int pX = this.getPosition().x;
+		int pY = this.getPosition().y;
+		Point convertPos = new Point(localP.x + pX, localP.y + pY);
+		return inObj.toGlobal(convertPos);
 	}
-*/
+
+	public Point toLocal(Point globalP) {
+		Point pos = toGlobal(globalP);
+		Point convert = new Point(globalP.x - pos.x,globalP.y - pos.y);
+		return convert;
+	}
 
 	// find the center of the image
 //	public void setCenterPoint() {
@@ -295,14 +312,16 @@ public class DisplayObject{
 	}
 
 
+
 	/**
 	 * Applies transformations for this display object to the given graphics
 	 * object
 	 */
 	protected void applyTransformations(Graphics2D g2d) {
 		g2d.translate(this.position.x, this.position.y);
-		g2d.rotate(Math.toRadians(this.getRotation()), this.pivotPoint.x, this.pivotPoint.y);
 		g2d.scale(this.scaleX, this.scaleY);
+		g2d.rotate(Math.toRadians(this.getRotation()), this.pivotPoint.x, this.pivotPoint.y);
+
 
 
 		if (this.visible) {
@@ -321,10 +340,9 @@ public class DisplayObject{
 	 */
 	protected void reverseTransformations(Graphics2D g2d) {
 		g2d.setComposite(AlphaComposite.getInstance(3, this.oldAlpha));
+		g2d.rotate(Math.toRadians((-1) * this.getRotation()), -this.pivotPoint.x, -this.pivotPoint.y);
 		g2d.scale((1 / this.scaleX), (1 / this.scaleY));
-		g2d.rotate(Math.toRadians((-1) * this.getRotation()), this.pivotPoint.x, this.pivotPoint.y);
 		g2d.translate((-1) * this.position.x, (-1) * this.position.y);
-
 	}
 
 
@@ -335,14 +353,14 @@ public class DisplayObject{
 	 */
 	public void draw(Graphics g) {
 
-		if (displayImage != null) {
+		if (displayImage != null && getVisible()){
 
 			/*
 			 * Get the graphics and apply this objects transformations
 			 * (rotation, etc.)
 			 */
 			Graphics2D g2d = (Graphics2D) g;
-			applyTransformations(g2d);
+			//applyTransformations(g2d);
 
 			/* Actually draw the image, perform the pivot point translation here */
 			g2d.drawImage(displayImage, 0, 0,

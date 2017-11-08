@@ -2,16 +2,17 @@ package edu.virginia.lab4test;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.Sprite;
+import edu.virginia.engine.display.AnimatedSprite;
+import edu.virginia.engine.display.Animation;
 import edu.virginia.engine.display.SoundManager;
-//import edu.virginia.engine.display.AnimatedSprite;
-//import edu.virginia.engine.display.Animation;
 import edu.virginia.engine.display.DisplayObject;
 import edu.virginia.engine.display.DisplayObjectContainer;
+import edu.virginia.engine.display.SoundManager;
 import java.awt.geom.AffineTransform;
 
 import java.awt.Shape;
@@ -24,6 +25,11 @@ import javax.sound.sampled.*;
  * */
 
 public class LabFourGame extends Game {
+	//good dudes
+	Sprite pipe = new Sprite("Pipe", "pipe.png", null, new Point(1000, 750));
+	//bad dudes
+	Sprite coin1 = new Sprite("Coin1", "piranha1.png", null, new Point(350,350));
+	Sprite coin2 = new Sprite("Coin2", "piranha2.png", null, new Point(750,350));
 
 	Sprite coin1 = new Sprite("Coin1", "coin1.png", null, new Point(200, 150));
 //	Rectangle c1box = coin1.getHitBox().getBounds();
@@ -48,9 +54,9 @@ public class LabFourGame extends Game {
 //	Sprite plant = new Sprite("Plant", "piranha.png", null, new Point(500,450));
 
 	public int score;
+	AffineTransform atran = new AffineTransform();
+	SoundManager sounds = new SoundManager();
 
-	public AffineTransform atran = new AffineTransform();
-	//SoundManager sound = new SoundManager();
 
 	/**
 	 * Constructor. See constructor in Game.java for details on the parameters given
@@ -111,12 +117,12 @@ public class LabFourGame extends Game {
 			if (pressedKeys.contains(KeyEvent.VK_W)) {
 				mario.setRotation(mario.getRotation() + 10);
 				Point pivot = mario.getPivotPoint();
-				atran.rotate(Math.toRadians(mario.getRotation()), pivot.x, pivot.y);
+				atran.getRotateInstance(Math.toRadians(mario.getRotation()), pivot.x, pivot.y);
 			}
 			if (pressedKeys.contains(KeyEvent.VK_Q)) {
 				mario.setRotation(mario.getRotation() - 10);
 				Point pivot = mario.getPivotPoint();
-				atran.rotate(Math.toRadians(mario.getRotation()),pivot.x , pivot.y);
+				atran = atran.getRotateInstance(Math.toRadians(mario.getRotation()),pivot.x , pivot.y);
 			}
 			// SCALE up , down
 			if (pressedKeys.contains(KeyEvent.VK_A)){
@@ -128,6 +134,7 @@ public class LabFourGame extends Game {
 					mario.setScaleX(mario.getScaleX() + 0.1);
 					mario.setScaleY(mario.getScaleY() + 0.1);
 				}
+				//mario.setHitArea();
 			}
 			if (pressedKeys.contains(KeyEvent.VK_S)) {
 				if (mario.getScaleX() <= 0.2) {
@@ -137,6 +144,7 @@ public class LabFourGame extends Game {
 					mario.setScaleX(mario.getScaleX() - 0.1);
 					mario.setScaleY(mario.getScaleY() - 0.1);
 				}
+				//mario.setHitArea();
 			}
 			// TRANSPARENCY more , less
 			if (pressedKeys.contains(KeyEvent.VK_Z)){
@@ -180,9 +188,9 @@ public class LabFourGame extends Game {
 			*/
 
 			// Making sure our HitAreas are correct!
-			marioBox.setRect(mario.getPosition().x, mario.getPosition().y, mario.getUnscaledWidth()*getScaleX(),
-					mario.getUnscaledHeight()*mario.getScaleY());
-			mario.setHitBox(marioBox);
+			//mario.setHitArea();
+			//marioBox.setRect(mario.getPosition().x, mario.getPosition().y, mario.getWidth(),mario.getHeight());
+
 
 		}
 	}
@@ -196,12 +204,15 @@ public class LabFourGame extends Game {
 	@Override
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		Graphics2D text= (Graphics2D) g;
-
 		Color SkyBlue = new Color(31, 190, 214);
 		g2d.setColor(SkyBlue);
-		g2d.fillRect(0, 0, 1000, 700);
+		g2d.fillRect(0, 50, 1400, 900);
 
+		Graphics2D text= (Graphics2D) g;
+		text.drawString("Score: " + score,400,40);
+		text.setColor(Color.BLACK);
+
+		//mario.setHitBox(atran.createTransformedShape(mario.getHitBox()));
 
 		System.out.println(mario.hitArea);
 
@@ -221,18 +232,26 @@ public class LabFourGame extends Game {
 		if (pipe != null) {
 			pipe.draw(g);
 		}
-		box = atran.createTransformedShape(marioBox);
-		marioBox = box.getBounds();
-		mario.setHitBox(marioBox);
-		g2d.draw(marioBox);
+		Shape box = atran.createTransformedShape(mario.getHitBox());
+
+		mario.setHitBox(box);
+
+		g2d.draw(mario.getHitBox());
 
 		if (mario.collidesWith(pipe)==true) {
-			score = score + 20;
-			g.drawString("YOU WIN!!!!! Final score: " + score,300,50);
+			score = score + 1000;
+			text.drawString("+1000 points.... YOU WIN!!!!! Final score: " + score,300,50);
+			this.sounds.playSoundEffect("end");
 			stop();
 			this.sounds.playSoundEffect("end");
 		}
 		if (mario.collidesWith(coin1)==true){
+			score = score - 10;
+			this.sounds.playSoundEffect("points");
+		}
+		if (mario.collidesWith(coin2) ==true){
+			score = score - 10;
+			this.sounds.playSoundEffect("points");
 			this.sounds.playSoundEffect("points");
 			score = score + 40;
 			//sm.PlaySoundEffect("se1");
@@ -242,8 +261,7 @@ public class LabFourGame extends Game {
 			score = score + 40;
 			//sm.PlaySoundEffect("se1");
 		}
-		text.drawString("Score: " + score,400,20);
-		text.setColor(Color.BLACK);
+
 
 	}
 
