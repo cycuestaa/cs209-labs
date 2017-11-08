@@ -9,6 +9,7 @@ import edu.virginia.engine.display.Game;
 import edu.virginia.engine.display.Sprite;
 import edu.virginia.engine.display.AnimatedSprite;
 import edu.virginia.engine.display.Animation;
+import edu.virginia.engine.display.SoundManager;
 import edu.virginia.engine.display.DisplayObject;
 import edu.virginia.engine.display.DisplayObjectContainer;
 import edu.virginia.engine.display.SoundManager;
@@ -30,10 +31,27 @@ public class LabFourGame extends Game {
 	Sprite coin1 = new Sprite("Coin1", "piranha1.png", null, new Point(350,350));
 	Sprite coin2 = new Sprite("Coin2", "piranha2.png", null, new Point(750,350));
 
-	//main dude
-	Sprite mario = new Sprite("Mario", "Mario.png", null, new Point(0,50));
-	Rectangle2D marioBox = new Rectangle2D.Double(mario.getPosition().x, mario.getPosition().y, mario.getWidth(),
-			mario.getHeight());
+	Sprite coin1 = new Sprite("Coin1", "coin1.png", null, new Point(200, 150));
+//	Rectangle c1box = coin1.getHitBox().getBounds();
+
+	Sprite coin2 = new Sprite("Coin2", "coin2.png", null, new Point(300, 150));
+//	Rectangle c2box = coin2.getHitBox().getBounds();
+
+	Sprite pipe = new Sprite("Pipe", "pipe.png", null, new Point(550, 880));
+//	Rectangle exitbox = pipe.getHitBox().getBounds();
+
+	Sprite mario = new Sprite("Mario", "Mario.png", null, new Point(0, 0));
+	Shape box = new Rectangle(mario.getPosition().x, mario.getPosition().y, mario.getUnscaledWidth(),
+			mario.getUnscaledHeight());
+	Rectangle marioBox = box.getBounds();
+
+	SoundManager sounds = new SoundManager();
+
+
+
+
+	//	Sprite c3 = new Sprite("Coin3", "coin3.png", null, new Point(700,250));
+//	Sprite plant = new Sprite("Plant", "piranha.png", null, new Point(500,450));
 
 	public int score;
 	AffineTransform atran = new AffineTransform();
@@ -44,8 +62,8 @@ public class LabFourGame extends Game {
 	 * Constructor. See constructor in Game.java for details on the parameters given
 	 * */
 	public LabFourGame() {
-		super("Lab Four Test Game", 1400, 900);
-		score = 1000;
+		super("Lab Four Test Game", 1000, 700);
+		score = 100;
 		sounds.LoadSoundEffect("points","ding.wav");
 		sounds.LoadSoundEffect("die","end.wav");
 		sounds.LoadMusic("main", "main_music.wav");
@@ -195,6 +213,12 @@ public class LabFourGame extends Game {
 		text.setColor(Color.BLACK);
 
 		//mario.setHitBox(atran.createTransformedShape(mario.getHitBox()));
+
+		System.out.println(mario.hitArea);
+
+		Shape s = mario.getHitBox();
+
+		mario.setHitBox(atran.createTransformedShape(s));
 	/* Same, just check for null in case a frame gets thrown in before Mario is initialized */
 		if (mario != null) {
 			mario.draw(g);
@@ -219,6 +243,7 @@ public class LabFourGame extends Game {
 			text.drawString("+1000 points.... YOU WIN!!!!! Final score: " + score,300,50);
 			this.sounds.playSoundEffect("end");
 			stop();
+			this.sounds.playSoundEffect("end");
 		}
 		if (mario.collidesWith(coin1)==true){
 			score = score - 10;
@@ -227,6 +252,14 @@ public class LabFourGame extends Game {
 		if (mario.collidesWith(coin2) ==true){
 			score = score - 10;
 			this.sounds.playSoundEffect("points");
+			this.sounds.playSoundEffect("points");
+			score = score + 40;
+			//sm.PlaySoundEffect("se1");
+		}
+		if (mario.collidesWith(coin2) ==true){
+			this.sounds.playSoundEffect("points");
+			score = score + 40;
+			//sm.PlaySoundEffect("se1");
 		}
 
 
